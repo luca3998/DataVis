@@ -4,9 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InfoVis</title>
-    <script src = "https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+    body {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 14px;
+    color: #333;
+    }
+
+    #content .map path {
+    fill: #e1e1e1;
+    stroke: #aaa;
+    }
+
+    </style>
+
 </head>
+
+<script type = "module" src = "script.js"></script>
+
 <body>
-    <h1>Hello world</h1>
+    <h1>Energy something</h1>
+
+    <div id="content">
+        <svg width="1000px" height="600px">
+        <g class="map"></g>
+        </svg>
+    </div>
+
+
+
 </body>
 </html>
