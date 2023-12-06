@@ -12,27 +12,26 @@
     color: #333;
     }
 
-    #content .map path {
+    #content{
     fill: #e1e1e1;
     stroke: #aaa;
+    }
+
+    .comparison{
+        display: inline-block;
     }
 
     </style>
 
 </head>
-
+<!-- WorldMap view module: -->
 <script type = "module" src = "script.js"></script>
-
 <body>
     <h1>Energy something</h1>
-
     <div id="content">
-        <svg width="1000px" height="600px">
-        <g class="map"></g>
-        </svg>
     </div>
-
-
-
+    <!-- Comparison view: -->
+    <div class="comparison" id="countryOne"></div>
+    <div class="comparison" id="countryTwo"></div>
 </body>
 </html>
