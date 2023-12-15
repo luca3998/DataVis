@@ -20,11 +20,30 @@
     .comparison{
         display: inline-block;
     }
+    .button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+#container {
+    display: flex;
+}
+</style>
 
-    </style>
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="chord_dia.js" defer></script>
+
+
 
 </head>
 <!-- WorldMap view module: -->
+<body onload="drawChordDiagram()">
 <script type = "module" src = "scripts/script.js"></script>
 <body>
     <h1>Energy something</h1>
@@ -34,6 +53,15 @@
     <div class="comparison" id="countryOne"></div>
     <div class="comparison" id="countryTwo"></div>
 
+    <h1>Trade something</h1>
+    <div id="tooltip"></div>
+    <div id="container">
+        <div id="my_dataviz"></div>
+        <button id="import_button" type="button" onclick="loadCSV_chord('elec_import/elec_import_2020.csv', 1)">Import</button>
+        <button id="export_button" type="button" onclick="loadCSV_chord('elec_export/elec_export_2020.csv', 0)">Export</button>
+    </div>
+    
+    
     <div id="legend"></div>
     <div class="lineGraph" id="overTimeGraph"></div>
     <label for="yearSlider">Year:</label>
