@@ -1,22 +1,34 @@
-var filepath_chord = "datasets/elec_export/elec_export_2021.csv"
+var filepath_chord = "datasets/elec_export/elec_export_2000.csv"
+var is_import_global = 1
 // Load the CSV data
-function loadCSV_chord(filename){
+function loadCSV_chord(filename, is_import){
         dir_path = "datasets/"
         filepath_chord = dir_path + filename
         console.log(filepath_chord)
+        is_import_global = is_import;
+        console.log(is_import)
+        drawChordDiagram();
 }
+
+function drawChordDiagram(){
+    if(!d3.select("#my_dataviz").select("svg").empty()){
+        d3.select("#my_dataviz").select("svg").remove();
+    }
 // create the svg area
 var svg = d3.select("#my_dataviz")
   .append("svg")
-    .attr("width", 500)
-    .attr("height", 500)
-  .append("g")
-    .attr("transform", "translate(220,220)");
+    .attr("width", 600)
+    .attr("height", 600)
+    .append("g")
+    .attr("transform", "translate(300,300)");
 
 d3.csv(filepath_chord, function(data) {
+
     // Extract the relevant data (ignoring the first row and column)
     var entities = data.columns.slice(1); // Assuming the first column is the entities
-
+    console.log('Data:', data); // Log the data array to the console
+    console.log('Entities:', entities); // Log the entities array to the console
+    
     // Create a color scale
     var colorScale = d3.scaleOrdinal()
         .domain(entities)
@@ -60,7 +72,7 @@ d3.csv(filepath_chord, function(data) {
         // Reset color and opacity for all ribbons
         svg.selectAll("path.ribbon")
             .style("fill", "#69b3a2")
-            .style("opacity", 0.3);
+            .style("opacity", 0.1);
 
         // Highlight ribbons of the same color as the clicked country
         svg.selectAll("path.ribbon")
@@ -70,20 +82,6 @@ d3.csv(filepath_chord, function(data) {
             .style("fill", colorScale(entities[i])) // Set ribbon color to country color
             .style("opacity", 1); // Set opacity to full for the highlighted ribbons
 
-       // Show values in a tooltip or box
-        var tooltip = d3.select("#tooltip");
-        var tooltipContent = entities
-            .map(function(country, index) {
-                var value = +data[index][entities[i]];
-                return value !== 0.0 ? country + ": " + value : null;
-            })
-            .filter(Boolean)
-            .join("<br>");
-
-        tooltip.html("Imports from:<br>" + tooltipContent)
-            .style("left", (d3.event.pageX + 10) + "px")
-            .style("top", (d3.event.pageY - 28) + "px")
-            .style("opacity", 1);
     });
 
     // Add the country names as labels
@@ -117,10 +115,6 @@ d3.csv(filepath_chord, function(data) {
         .style("stroke", "black")
         .style("opacity", 0.3); // Set the initial opacity for all ribbons
 });
+}
 
-// Add a div for the tooltip
-var tooltipDiv = d3.select("body").append("div")
-    .attr("id", "tooltip")
-    .style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden");
+
