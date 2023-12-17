@@ -37,15 +37,15 @@
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
-<script src="scripts/" defer></script>
+<script type = "module" src = "scripts/script.js"></script>
+<script type = "module" src="scripts/chord_dia.js" defer></script>
 
 
 
 </head>
 <!-- WorldMap view module: -->
-<body onload="drawChordDiagram()">
-<script type = "module" src = "scripts/script.js"></script>
-<body>
+<body #onload="loadCSV_chord(2020)">
+
     <h1>Energy something</h1>
     <div id="content">
     </div>
@@ -57,8 +57,8 @@
     <div id="tooltip"></div>
     <div id="container">
         <div id="my_dataviz"></div>
-        <button id="import_button" type="button" onclick="loadCSV_chord('elec_import/elec_import_2020.csv', 1)">Import</button>
-        <button id="export_button" type="button" onclick="loadCSV_chord('elec_export/elec_export_2020.csv', 0)">Export</button>
+        <button id="import_button" type="button">Import</button>
+        <button id="export_button" type="button">Export</button>
     </div>
     
     

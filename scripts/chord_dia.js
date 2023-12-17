@@ -1,12 +1,66 @@
+
+import { getSliderValue } from './global.js';
+
+
 var filepath_chord = "datasets/elec_export/elec_export_2000.csv"
 var is_import_global = 1
+var sliderValue = 2020
+
+// Function to handle the slider value change
+function handleSliderChange() {
+    sliderValue = getSliderValue();
+    console.log('Current slider value:', sliderValue);
+
+    reloadFigure()
+    // Perform additional actions based on the slider value
+    // ...
+
+    // For example, update a visualization or trigger some other function
+}
+
+// Add an event listener to the slider to react to changes
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure the DOM is fully loaded
+
+    // Attach the event listener to the slider
+    document.getElementById("yearSlider").addEventListener("input", handleSliderChange);
+
+    // You can also perform any initial actions when the page loads
+    handleSliderChange();
+});
+
+
+// Add event listener for Import button
+document.getElementById("import_button").addEventListener("click", function() {
+    is_import_global = 1;
+    console.log("import button")
+    reloadFigure();
+});
+
+// Add event listener for Export button
+document.getElementById("export_button").addEventListener("click", function() {
+    is_import_global = 0;
+    console.log("export button")
+    reloadFigure();
+});
+
+function reloadFigure() {
+    // You can add any additional logic or modifications needed before reloading the figure
+    console.log(sliderValue)
+    loadCSV_chord(); // Assuming sliderNumber is defined
+}
+
+
 // Load the CSV data
-function loadCSV_chord(filename, is_import){
-        dir_path = "datasets/"
-        filepath_chord = dir_path + filename
+function loadCSV_chord(){
+        if(is_import_global === 1){
+            filepath_chord = `datasets/elec_import/elec_import_${sliderValue}.csv`;
+        }
+        else if (is_import_global === 0){
+            filepath_chord =  `datasets/elec_export/elec_export_${sliderValue}.csv`;
+        }
         console.log(filepath_chord)
-        is_import_global = is_import;
-        console.log(is_import)
+
         drawChordDiagram();
 }
 
