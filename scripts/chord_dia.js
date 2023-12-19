@@ -1,10 +1,11 @@
 
-import { getSliderValue } from './global.js';
+import { getSliderValue, selectedCountries } from './global.js';
 
 
 var filepath_chord = "datasets/elec_export/elec_export_2000.csv"
 var is_import_global = 1
 var sliderValue = 2020
+var countryArray = ['NL','DE','FR']
 
 // Function to handle the slider value change
 function handleSliderChange() {
@@ -12,10 +13,6 @@ function handleSliderChange() {
     console.log('Current slider value:', sliderValue);
 
     reloadFigure()
-    // Perform additional actions based on the slider value
-    // ...
-
-    // For example, update a visualization or trigger some other function
 }
 
 // Add an event listener to the slider to react to changes
@@ -121,22 +118,6 @@ d3.csv(filepath_chord, function(data) {
             .outerRadius(210)
         );
 
-    // Add tooltip functionality
-    arcs.on("click", function(d, i) {
-        // Reset color and opacity for all ribbons
-        svg.selectAll("path.ribbon")
-            .style("fill", "#69b3a2")
-            .style("opacity", 0.1);
-
-        // Highlight ribbons of the same color as the clicked country
-        svg.selectAll("path.ribbon")
-            .filter(function(ribbon) {
-                return ribbon.source.index === i || ribbon.target.index === i;
-            })
-            .style("fill", colorScale(entities[i])) // Set ribbon color to country color
-            .style("opacity", 1); // Set opacity to full for the highlighted ribbons
-
-    });
 
     // Add the country names as labels
     group.append("text")
@@ -151,24 +132,40 @@ d3.csv(filepath_chord, function(data) {
         .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
         .text(function(d, i) { return entities[i]; });
 
-    // Add the links between groups
-    svg
-        .datum(res)
-        .append("g")
-        .selectAll("path.ribbon")
-        .data(function (d) {
-            return d;
-        })
-        .enter()
-        .append("path")
-        .attr("class", "ribbon")
-        .attr("d", d3.ribbon()
-            .radius(200)
-        )
-        .style("fill", "#69b3a2")
-        .style("stroke", "black")
-        .style("opacity", 0.3); // Set the initial opacity for all ribbons
+// Add the links between groups
+svg
+    .datum(res)
+    .append("g")
+    .selectAll("path.ribbon")
+    .data(function (d) {
+        return d;
+    })
+    .enter()
+    .append("path")
+    .attr("class", "ribbon")
+    .attr("d", d3.ribbon()
+        .radius(200)
+    )
+    .style("fill", function (d) {
+        return "#69b3a2"; // Set the initial fill color for all ribbons
+    })
+    .style("stroke", "black")
+    .style("opacity", 0); // Set the initial opacity for all ribbons
+
+// Highlight ribbons for countries in countryArray
+countryArray.forEach(function (country) {
+    var countryIndex = entities.indexOf(country);
+    if (countryIndex !== -1) {
+        svg.selectAll("path.ribbon")
+            .filter(function (ribbon) {
+                return ribbon.source.index === countryIndex || ribbon.target.index === countryIndex;
+            })
+            .transition()
+            .duration(500)
+            .style("fill", colorScale(country))
+            .style("opacity", 1);
+    }
 });
+
 }
-
-
+)}
