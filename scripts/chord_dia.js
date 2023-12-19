@@ -1,10 +1,10 @@
 
-import { getSliderValue, selectedCountries } from './global.js';
+import { getSliderValue, selectedCountries, getImportValue} from './global.js';
 
 
 var filepath_chord = "datasets/elec_export/elec_export_2000.csv"
-var is_import_global = 1
 var sliderValue = 2020
+var is_import_local = 1
 var countryArray = ['NL','DE','FR']
 
 // Function to handle the slider value change
@@ -18,28 +18,22 @@ function handleSliderChange() {
 // Add an event listener to the slider to react to changes
 document.addEventListener('DOMContentLoaded', function() {
     // Ensure the DOM is fully loaded
-
     // Attach the event listener to the slider
     document.getElementById("yearSlider").addEventListener("input", handleSliderChange);
-
     // You can also perform any initial actions when the page loads
     handleSliderChange();
 });
 
-
-// Add event listener for Import button
-document.getElementById("import_button").addEventListener("click", function() {
-    is_import_global = 1;
-    console.log("import button")
+// Function to handle the import value change
+function handleImportChange() {
+    is_import_local = getImportValue();
+    console.log('Current import value:', is_import_local);
     reloadFigure();
-});
+}
 
-// Add event listener for Export button
-document.getElementById("export_button").addEventListener("click", function() {
-    is_import_global = 0;
-    console.log("export button")
-    reloadFigure();
-});
+// Attach the event listener to the custom event
+document.addEventListener("is_import_value_changed", handleImportChange);
+
 
 function reloadFigure() {
     // You can add any additional logic or modifications needed before reloading the figure
@@ -50,10 +44,11 @@ function reloadFigure() {
 
 // Load the CSV data
 function loadCSV_chord(){
-        if(is_import_global === 1){
+    console.log(is_import_local)
+        if(is_import_local === 1){
             filepath_chord = `datasets/elec_import/elec_import_${sliderValue}.csv`;
         }
-        else if (is_import_global === 0){
+        else if (is_import_local === 0){
             filepath_chord =  `datasets/elec_export/elec_export_${sliderValue}.csv`;
         }
         console.log(filepath_chord)
