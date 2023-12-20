@@ -1,5 +1,6 @@
 // global.js
 export const selectedCountries = [];
+export const countryArray = [];
 export const colors = {
     "Russia": "red",
     "France": "blue",
@@ -7,6 +8,9 @@ export const colors = {
 };
 export const transitionTime = 1000;
 export const dataset = "fakedata.csv";
+export const total_import = "datasets/totals/import.csv";
+export const total_export = "datasets/totals/export.csv";
+export const country_data = "countries.csv";
 export const slider = document.getElementById("yearSlider");
 
 // Declare sliderValue outside the event listener
