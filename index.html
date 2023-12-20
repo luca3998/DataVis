@@ -34,6 +34,58 @@
 #container {
     display: flex;
 }
+
+
+
+.toggleContainer {
+   position: relative;
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   width: fit-content;
+   border: 3px solid #343434;
+   border-radius: 20px;
+   background: #343434;
+   font-weight: bold;
+   color: #343434;
+   cursor: pointer;
+ }
+ .toggleContainer::before {
+   content: '';
+   position: absolute;
+   width: 50%;
+   height: 100%;
+   left: 0%;
+   border-radius:20px;
+   background: white;
+   transition: all 0.3s;
+ }
+ .toggleCheckbox:checked + .toggleContainer::before {
+    left: 50%;
+ }
+ .toggleContainer div {
+   padding: 6px;
+   text-align: center;
+   z-index: 1;
+ }
+ .toggleCheckbox {
+   display: none;
+ }
+ .toggleCheckbox:checked + .toggleContainer div:first-child{
+   color: white;
+   transition: color 0.3s;
+ }
+ .toggleCheckbox:checked + .toggleContainer div:last-child{
+   color: #343434;
+   transition: color 0.3s;
+ }
+ .toggleCheckbox + .toggleContainer div:first-child{
+   color: #343434;
+   transition: color 0.3s;
+ }
+ .toggleCheckbox + .toggleContainer div:last-child{
+   color: white;
+   transition: color 0.3s;
+ }
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
@@ -44,26 +96,22 @@
 
 </head>
 <!-- WorldMap view module: -->
-<body #onload="loadCSV_chord(2020)">
-
+<body onload="loadCSV_chord(2020)">
     <h1>Energy something</h1>
-    <div id="content">
-    </div>
+    <div id="content"></div>
     <div id="mapLegend"></div>
 
-    <!-- Comparison view: -->
-    <div class="comparison" id="countryOne"></div>
-    <div class="comparison" id="countryTwo"></div>
+    <input type="checkbox" id="toggle" class="toggleCheckbox" />
+    <label for="toggle" class='toggleContainer'>
+        <div>Export</div>
+        <div>Import</div>
+    </label>
 
     <h1>Trade something</h1>
-    <div id="tooltip"></div>
-    <div id="container">
-        <div id="my_dataviz"></div>
-        <button id="import_button" type="button">Import</button>
-        <button id="export_button" type="button">Export</button>
-    </div>
-    
-    
+
+    <div id="my_dataviz"></div>
+
+
     <div id="legend"></div>
     <div class="lineGraph" id="overTimeGraph"></div>
     <label for="yearSlider">Year:</label>
@@ -71,4 +119,5 @@
     <input type="range" min="1990" max="2021" value="2012" id="yearSlider">
     <div id="yearSliderNumber"></div>
 </body>
+
 </html>
