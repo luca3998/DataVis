@@ -106,7 +106,19 @@ function loadMap(){
                     return colorScale(result);
                 } else {
                     // Handle cases where data is not available for a country
-                    return 'green'; 
+                    svg.append('defs')
+                        .append('pattern')
+                        .attr('id', 'stripes')
+                        .attr('width', 8)
+                        .attr('height', 8)
+                        .attr('patternUnits', 'userSpaceOnUse')
+                        .attr('patternTransform', 'rotate(45)')
+                        .append('rect')
+                        .attr('width', 8)
+                        .attr('height', 8)
+                        .attr('fill', 'light gray'); // Stripe color
+                        
+                    return 'url(#stripes)' ; 
                 }
             })
             .on("click", handleCountryClick);
