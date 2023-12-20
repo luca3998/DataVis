@@ -83,6 +83,7 @@ slider.addEventListener("input", function() {
         .attr("x2", xAxis(this.value))
 });
 
+
 function updateOverTime(country, countryCode, add, data) {
     const svg = d3.select("#overTimeGraph").select("svg").select("g");
     
