@@ -1,4 +1,5 @@
 // global.js
+
 export const selectedCountries = [];
 export const countryArray = [];
 export const colors = {
@@ -48,4 +49,9 @@ document.getElementById("export_button").addEventListener("click", function() {
 export function getImportValue(){
     console.log(is_import_value);
     return is_import_value;
+};
+
+export function getCountries(){
+    console.log('Current countries value:', countryArray);
+    return countryArray
 };

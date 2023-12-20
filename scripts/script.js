@@ -208,6 +208,7 @@ function handleCountryClick(event, d) {
         d3.select(this).style("stroke", "#aaa");
     }
     getCountryCode(countryName, function(countryCode) {
+        document.dispatchEvent(new Event("countryArrayChange"));
             if(index === -1){
                 selectedCountries.push(countryName);
                 countryArray.push(countryCode);

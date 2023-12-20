@@ -1,11 +1,11 @@
 
-import { getSliderValue, selectedCountries, getImportValue} from './global.js';
+import {getSliderValue, getCountries, getImportValue} from './global.js';
 
 
 var filepath_chord = "datasets/elec_export/elec_export_2000.csv"
 var sliderValue = 2020
 var is_import_local = 1
-var countryArray = ['NL','DE','FR']
+var countries_chord = []
 
 // Function to handle the slider value change
 function handleSliderChange() {
@@ -34,6 +34,14 @@ function handleImportChange() {
 // Attach the event listener to the custom event
 document.addEventListener("is_import_value_changed", handleImportChange);
 
+
+function handleCountryChange(){
+    countries_chord = getCountries();
+    console.log('Current countries value:', countries_chord);
+    reloadFigure();
+}
+
+document.addEventListener("countryArrayChange", handleCountryChange)
 
 function reloadFigure() {
     // You can add any additional logic or modifications needed before reloading the figure
@@ -72,8 +80,8 @@ d3.csv(filepath_chord, function(data) {
 
     // Extract the relevant data (ignoring the first row and column)
     var entities = data.columns.slice(1); // Assuming the first column is the entities
-    console.log('Data:', data); // Log the data array to the console
-    console.log('Entities:', entities); // Log the entities array to the console
+    // console.log('Data:', data); // Log the data array to the console
+    //console.log('Entities:', entities); // Log the entities array to the console
     
     // Create a color scale
     var colorScale = d3.scaleOrdinal()
@@ -148,7 +156,7 @@ svg
     .style("opacity", 0); // Set the initial opacity for all ribbons
 
 // Highlight ribbons for countries in countryArray
-countryArray.forEach(function (country) {
+countries_chord.forEach(function (country) {
     var countryIndex = entities.indexOf(country);
     if (countryIndex !== -1) {
         svg.selectAll("path.ribbon")
