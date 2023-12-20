@@ -30,19 +30,9 @@ slider.addEventListener("input", function() {
 
 export let is_import_value;
 
-// Add event listener for Import button
-document.getElementById("import_button").addEventListener("click", function() {
-    is_import_value = 1;
-    console.log("Import button");
-    // Trigger a custom event or call handleImportChange directly
-    document.dispatchEvent(new Event("is_import_value_changed"));
-});
-
-// Add event listener for Export button
-document.getElementById("export_button").addEventListener("click", function() {
-    is_import_value = 0;
-    console.log("Export button");
-    // Trigger a custom event or call handleImportChange directly
+document.getElementById("toggle").addEventListener("change",function(){
+    is_import_value = this.checked ? 1:0;
+    console.log(this.checked ? "Import button" : "Export button");
     document.dispatchEvent(new Event("is_import_value_changed"));
 });
 
