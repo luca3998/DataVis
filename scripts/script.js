@@ -30,12 +30,46 @@ function updateDataset(){
 function handleImportChange() {
     is_import_local = getImportValue();
     updateDataset();
+    updateOverview();
     loadMap();
 }
 
 // Attach the event listener to the custom event
 document.addEventListener("is_import_value_changed", handleImportChange);
 
+function loadLegend(colorScale, maxVal){
+    if(!d3.select("#mapLegend").select("svg").empty()){
+        d3.select("#mapLegend").select("svg").remove();
+    }
+    // Create SVG container
+    const svg = d3.select('#mapLegend')
+        .append("svg")
+        .attr("width", 700)
+        .attr("height", 100);
+    // Number of legend steps
+    const numSteps = 10;
+
+    // Create legend elements
+    const legend = svg.selectAll('.legend-item')
+    .data(d3.range(numSteps + 1))
+    .enter().append('g')
+    .attr('class', 'legend-item')
+    .attr('transform', (d, i) => `translate(${i * 50}, 0)`);
+
+    // Draw legend colors
+    legend.append('rect')
+    .attr('width', 50)
+    .attr('height', 15)
+    .attr('fill', d => colorScale((d / numSteps) * maxVal));
+
+    // Draw legend values
+    legend.append('text')
+    .attr('x', 0)
+    .attr('y', 35)
+    .text(d => (Math.round(((d / numSteps) * maxVal) / 1000) * 1000) ); // Display the corresponding value
+}
+
+// Function that loads the worldmap choropleth
 function loadMap(){
     if(!d3.select("#content").select("svg").empty()){
         d3.select("#content").select("svg").remove();
@@ -50,27 +84,41 @@ function loadMap(){
     d3.json("europe.json").then(function(data) {
         // Draw the map
         d3.csv(dataset_total).then(function(data_one){
-
+            const maxVal = Math.max(...data_one.map(d => d.OBS_VALUE));
             const colorScale= d3.scaleLinear()
-            .domain([0, Math.max(...data_one.map(d => d.OBS_VALUE))])
+            .domain([0, maxVal])
             .range(['white', 'blue']);
 
+            loadLegend(colorScale, maxVal);
             
-            const test = data_one.filter(d => d.TIME_PERIOD === slider.value);
+            const filteredData = data_one.filter(d => d.TIME_PERIOD === slider.value);
             svg.selectAll("path")
             .data(data.features)
             .enter().append("path")
             .attr("d", path)
             .attr("fill", d => {
                 const geocode = d.properties.iso_a2_eh;
-                const value = test.filter(d => d['geo'] === geocode);
+                const value = filteredData.filter(d => d['geo'] === geocode);
+                console.log("VALUE: " + geocode + " " + value);
                 if (value[0]) {
                     // Use the found country data to determine the color
                     const result = value[0]['OBS_VALUE'];
                     return colorScale(result);
                 } else {
                     // Handle cases where data is not available for a country
-                    return 'light gray'; // or any default color
+                    svg.append('defs')
+                        .append('pattern')
+                        .attr('id', 'stripes')
+                        .attr('width', 8)
+                        .attr('height', 8)
+                        .attr('patternUnits', 'userSpaceOnUse')
+                        .attr('patternTransform', 'rotate(45)')
+                        .append('rect')
+                        .attr('width', 8)
+                        .attr('height', 8)
+                        .attr('fill', 'light gray'); // Stripe color
+                        
+                    return 'url(#stripes)' ; 
                 }
             })
             .on("click", handleCountryClick);
@@ -135,7 +183,22 @@ function getCountryCode(targetCountryName, callback) {
     });
   } 
 
-  // Handle country click event
+// this function updates the overTime view so that it changes from import to export values 
+// and vice versa when the buttons are pressed. 
+function updateOverview(){ 
+    const svg = d3.select("#overTimeGraph").select("svg").remove();
+    // opnieuw drawen 
+    overTime.overTImeView();
+    // opnieuw vullen 
+    selectedCountries.forEach(country => {
+        updateCountry(country,0);
+        updateCountry(country,1);
+    });
+    console.log(selectedCountries);
+
+}
+
+// Handle country click event
 function handleCountryClick(event, d) {
     const countryName = d.properties.name;
     const index = selectedCountries.indexOf(countryName);
