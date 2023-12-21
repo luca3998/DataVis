@@ -99,7 +99,7 @@ function loadMap(){
             .attr("fill", d => {
                 const geocode = d.properties.iso_a2_eh;
                 const value = filteredData.filter(d => d['geo'] === geocode);
-                console.log("VALUE: " + geocode + " " + value);
+                //console.log("VALUE: " + geocode + " " + value);
                 if (value[0]) {
                     // Use the found country data to determine the color
                     const result = value[0]['OBS_VALUE'];
