@@ -1,4 +1,5 @@
-import {slider, transitionTime} from "./global.js";
+import {country_data, is_import_value, slider, total_export, total_import, transitionTime} from "./global.js";
+import {getCountryColor} from "./script.js";
 
 // set the dimensions and margins of the graph
 const sankeyMargin = {top: 10, right: 100, bottom: 10, left: 100},
@@ -17,8 +18,9 @@ const importSankey = d3.sankey()
     .size([sankeyWidth, sankeyHeight]);
 
 let importSvg;
-
 let exportSvg;
+
+let current_dataset = "../datasets/nrg_te_eh_linear.csv"
 
 d3.csv("countries.csv", function (countries) {
     countries.forEach(c => {
@@ -56,6 +58,7 @@ function sankeyView() {
             "translate(" + sankeyMargin.left + "," + sankeyMargin.top + ")");
     sankeyImport();
     sankeyExport();
+    countryGraphView(current_dataset);
 }
 
 select.addEventListener("change", function () {
@@ -475,4 +478,124 @@ function updateSankey(graph, sankey, svg) {
 }
 
 
-export {sankeyView}
+document.getElementById("toggle").addEventListener("change",function(){
+    const is_import = this.checked ? 1 : 0;
+    if (is_import) {
+        current_dataset = "../datasets/nrg_ti_eh_linear.csv"
+    }
+    else {
+        current_dataset = "../datasets/nrg_te_eh_linear.csv"
+    }
+    countryGraphView(current_dataset)
+});
+
+// set the dimensions and margins of the graph
+const graphMargin = {top: 10, right: 30, bottom: 90, left: 40},
+    graphWidth = 800 - graphMargin.left - graphMargin.right,
+    graphHeight = 450 - graphMargin.top - graphMargin.bottom;
+
+const min_year = 1990
+const max_year = 2021
+
+// X axis
+const xAxis = d3.scalePoint()
+    .range([ 0, graphWidth ])
+    .domain(Array.from({length: max_year+1 - min_year}, (x, i) => i + min_year));
+
+function countryGraphView(dataset) {
+    if(!d3.select("#countryGraph").empty()){
+        d3.select("#countryGraph").select("svg").remove();
+    }
+
+    var svg=d3.select('#countryGraph').append('svg')
+        .attr('width', graphWidth + graphMargin.left + graphMargin.right)
+        .attr('height', graphHeight + graphMargin.top + graphMargin.bottom)
+        .append("g")
+        .attr("transform", `translate(${graphMargin.left},${graphMargin.top})`);
+
+    d3.csv(dataset, function (allData) {
+        const data = allData.filter(d => (
+            d.geo === selectedCountry
+            && d.unit === "GWH"
+            && d.OBS_VALUE > 0.0
+            && d.partner !== "TOTAL"
+        ))
+
+        svg.append("g")
+            .attr("class", "xAxis")
+            .attr("transform", "translate(0," + graphHeight + ")")
+            .call(d3.axisBottom(xAxis));
+
+        // Y axis
+        const yAxis = d3.scaleLinear()
+            .domain([])
+            .range([ graphHeight, 0]);
+
+        const maxVal = Math.max(...data.map(d => d.OBS_VALUE))
+        yAxis.domain([0, maxVal * 1.1])
+
+        svg.append("g")
+            .attr("class", "yAxis")
+            .call(d3.axisLeft(yAxis));
+
+        svg.append("line")
+            .attr("class", "yearLine")
+            .attr("fill", "none")
+            .attr("stroke", "rgba(255,128,0,0.5)")
+            .attr("stroke-width", 2.5)
+            .attr("x1", xAxis(slider.value))
+            .attr("y1", 0)
+            .attr("x2", xAxis(slider.value))
+            .attr("y2", graphHeight);
+
+        const allCountries = []
+        data.forEach(d => {
+            if (!allCountries.includes(d.partner))
+                allCountries.push(d.partner)
+        });
+
+        d3.csv(country_data, function(countries) {
+            function getColor(country_code) {
+                const country = countries.filter(c => c.country_code === country_code);
+                return country.length > 0 ? country[0].country_color : "black";
+            }
+
+            allCountries.forEach(c => {
+                let currentCountryData = data.filter(d => d.partner === c)
+
+                // Set value to 0 in missing years for countries that do show up at some point but not consistently
+                for (let year = min_year; year <= max_year; year++) {
+                    let i = year - min_year;
+                    if (!currentCountryData[i] || currentCountryData[i].TIME_PERIOD !== year.toString()) {
+                        currentCountryData.splice(i, 0, {"TIME_PERIOD": year, "OBS_VALUE": 0})
+                    }
+                }
+                // Add country line
+                svg.append("path")
+                    .attr("class", c + "Data")
+                    .datum(currentCountryData)
+                    .attr("fill", "none")
+                    .attr("stroke", getColor(c))
+                    .attr("stroke-width", 1.5)
+                    .attr("d", d3.line()
+                        .x(function (d) {
+                            return xAxis(+d.TIME_PERIOD)
+                        })
+                        .y(function (d) {
+                            return yAxis(d.OBS_VALUE)
+                        })
+                    );
+            });
+        })
+    });
+}
+
+slider.addEventListener("input", function() {
+    d3.selectAll(".yearLine")
+        .transition().ease(d3.easePolyOut)
+        .duration(transitionTime)
+        .attr("x1", xAxis(this.value))
+        .attr("x2", xAxis(this.value))
+});
+
+export {sankeyView, countryGraphView}
