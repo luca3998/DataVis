@@ -37,21 +37,34 @@
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
-<script src="scripts/" defer></script>
-
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/sankey.js"></script>
+<script src="scripts/chord_dia.js" defer></script>
+<script type = "module" src="scripts/global.js"></script>
+<script>
+</script>
 
 
 </head>
 <!-- WorldMap view module: -->
 <body onload="drawChordDiagram()">
 <script type = "module" src = "scripts/script.js"></script>
-<body>
     <h1>Energy something</h1>
     <div id="content">
     </div>
     <!-- Comparison view: -->
     <div class="comparison" id="countryOne"></div>
     <div class="comparison" id="countryTwo"></div>
+
+    <label for="yearSlider">Year:</label>
+    <br>
+    <input type="range" min="2000" max="2021" value="2012" id="yearSlider">
+    <div id="yearSliderNumber"></div>
+    <!-- Sankey view: -->
+    <div id="countryInfo">
+        <select id="countrySelect"></select>
+        <div id="sankeyView"></div>
+        <div id="countryGraph"></div>
+    </div>
 
     <h1>Trade something</h1>
     <div id="tooltip"></div>
@@ -64,9 +77,5 @@
     
     <div id="legend"></div>
     <div class="lineGraph" id="overTimeGraph"></div>
-    <label for="yearSlider">Year:</label>
-    <br>
-    <input type="range" min="2000" max="2021" value="2012" id="yearSlider">
-    <div id="yearSliderNumber"></div>
 </body>
 </html>

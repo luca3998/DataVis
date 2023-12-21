@@ -2,6 +2,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import *  as overTime from "./overtime.js";
 import worldMap from "../europe.json" assert { type: 'json' };
 import {colors, dataset, selectedCountries, slider} from "./global.js";
+import * as sankey from "./sankeyView.js";
 
 
 // This part renders the map on screen
@@ -28,6 +29,8 @@ d3.json("europe.json").then(function(data) {
       .attr("d", path)
       .on("click", handleCountryClick);
 });
+
+sankey.sankeyView();
 
 overTime.overTImeView();
 
