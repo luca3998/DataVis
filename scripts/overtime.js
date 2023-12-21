@@ -71,7 +71,15 @@ function overTImeView() {
             .attr("x2", xAxis(slider.value))
             .attr("y2", overTimeHeight);
 
-        
+        // Add slider value to sliding line
+        svg.append("text")
+        .attr("class", "yearValue")
+        .attr("fill", "rgba(255,128,0,0.5)")
+        .attr("x", xAxis(slider.value))
+        .attr("y", 10)
+        .attr("font-size", "15px")
+        .text("");
+
         // Add x-axis title
         svg.append("text")
         .attr("transform", "translate(300, 400)")
@@ -97,6 +105,12 @@ slider.addEventListener("input", function() {
         .duration(transitionTime)
         .attr("x1", xAxis(this.value))
         .attr("x2", xAxis(this.value))
+
+    d3.selectAll(".yearValue")
+        .transition().ease(d3.easePolyOut)
+        .duration(transitionTime)
+        .attr("x", xAxis(this.value) + 10)
+        .text(slider.value)
 });
 
 

@@ -219,6 +219,12 @@ function mouseHoverOut(event, d){
 function handleCountryClick(event, d) {
     const countryName = d.properties.name;
     const index = selectedCountries.indexOf(countryName);
+    var currentFillColor = d3.select(this).attr("fill");
+    
+    if(currentFillColor === "url(#stripes)"){
+        alert("No data available for " + countryName + " for this year, select a different country or year.");
+        return;
+    }
     if(index === -1){
         d3.select(this).style("stroke", "#333");
     } else{
