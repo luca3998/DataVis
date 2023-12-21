@@ -34,31 +34,80 @@
 #container {
     display: flex;
 }
+
+
+
+.toggleContainer {
+   position: relative;
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   width: fit-content;
+   border: 3px solid #343434;
+   border-radius: 20px;
+   background: #343434;
+   font-weight: bold;
+   color: #343434;
+   cursor: pointer;
+ }
+ .toggleContainer::before {
+   content: '';
+   position: absolute;
+   width: 50%;
+   height: 100%;
+   left: 0%;
+   border-radius:20px;
+   background: white;
+   transition: all 0.3s;
+ }
+ .toggleCheckbox:checked + .toggleContainer::before {
+    left: 50%;
+ }
+ .toggleContainer div {
+   padding: 6px;
+   text-align: center;
+   z-index: 1;
+ }
+ .toggleCheckbox {
+   display: none;
+ }
+ .toggleCheckbox:checked + .toggleContainer div:first-child{
+   color: white;
+   transition: color 0.3s;
+ }
+ .toggleCheckbox:checked + .toggleContainer div:last-child{
+   color: #343434;
+   transition: color 0.3s;
+ }
+ .toggleCheckbox + .toggleContainer div:first-child{
+   color: #343434;
+   transition: color 0.3s;
+ }
+ .toggleCheckbox + .toggleContainer div:last-child{
+   color: white;
+   transition: color 0.3s;
+ }
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
+<script type = "module" src = "scripts/script.js"></script>
+<script type = "module" src="scripts/chord_dia.js" defer></script>
 <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/sankey.js"></script>
-<script src="scripts/chord_dia.js" defer></script>
 <script type = "module" src="scripts/global.js"></script>
-<script>
-</script>
 
 
 </head>
 <!-- WorldMap view module: -->
-<body onload="drawChordDiagram()">
-<script type = "module" src = "scripts/script.js"></script>
+<body>
     <h1>Energy something</h1>
-    <div id="content">
-    </div>
-    <!-- Comparison view: -->
-    <div class="comparison" id="countryOne"></div>
-    <div class="comparison" id="countryTwo"></div>
+    <div id="content"></div>
+    <div id="mapLegend"></div>
 
-    <label for="yearSlider">Year:</label>
-    <br>
-    <input type="range" min="2000" max="2021" value="2012" id="yearSlider">
-    <div id="yearSliderNumber"></div>
+    <input type="checkbox" id="toggle" class="toggleCheckbox" />
+    <label for="toggle" class='toggleContainer'>
+        <div>Export</div>
+        <div>Import</div>
+    </label>
+
     <!-- Sankey view: -->
     <div id="countryInfo">
         <select id="countrySelect"></select>
@@ -67,15 +116,15 @@
     </div>
 
     <h1>Trade something</h1>
-    <div id="tooltip"></div>
-    <div id="container">
-        <div id="my_dataviz"></div>
-        <button id="import_button" type="button" onclick="loadCSV_chord('elec_import/elec_import_2020.csv', 1)">Import</button>
-        <button id="export_button" type="button" onclick="loadCSV_chord('elec_export/elec_export_2020.csv', 0)">Export</button>
-    </div>
-    
-    
+
+    <div id="my_dataviz"></div>
+
     <div id="legend"></div>
     <div class="lineGraph" id="overTimeGraph"></div>
+    <label for="yearSlider">Year:</label>
+    <br>
+    <input type="range" min="1990" max="2021" value="2012" id="yearSlider">
+    <div id="yearSliderNumber"></div>
 </body>
+
 </html>
