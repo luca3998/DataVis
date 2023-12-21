@@ -3,7 +3,7 @@ import {selectedCountries, total_import, total_export, getImportValue, slider, t
 import { getCountryColor } from "./script.js";
 
 // set the dimensions and margins of the graph
-const overTimeMargin = {top: 10, right: 30, bottom: 90, left: 40},
+const overTimeMargin = {top: 10, right: 30, bottom: 90, left: 60},
     overTimeWidth = 800 - overTimeMargin.left - overTimeMargin.right,
     overTimeHeight = 450 - overTimeMargin.top - overTimeMargin.bottom;
 
@@ -65,11 +65,27 @@ function overTImeView() {
             .attr("class", "yearLine")
             .attr("fill", "none")
             .attr("stroke", "rgba(255,128,0,0.5)")
-            .attr("stroke-width", 1.5)
+            .attr("stroke-width", 3)
             .attr("x1", xAxis(slider.value))
             .attr("y1", 0)
             .attr("x2", xAxis(slider.value))
             .attr("y2", overTimeHeight);
+
+        
+        // Add x-axis title
+        svg.append("text")
+        .attr("transform", "translate(300, 400)")
+        .style("text-anchor", "middle")
+        .text("Year");
+
+        // Add y-axis title
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - 60)
+            .attr("x", 0 - 150)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("GWh");
 
         d3.select("#overTimeLegend").append("svg")
     })

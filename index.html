@@ -35,6 +35,11 @@
     display: flex;
 }
 
+#projectTitle{
+  position: absolute; 
+  left:50px;
+  font-size: 30px;
+}
 
 
 .toggleContainer {
@@ -47,6 +52,7 @@
    background: #343434;
    font-weight: bold;
    color: #343434;
+   margin: 15px auto;
    cursor: pointer;
  }
  .toggleContainer::before {
@@ -86,6 +92,47 @@
    color: white;
    transition: color 0.3s;
  }
+
+ .grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  grid-gap: 10px;
+  /* background-color: rgb(0, 115, 255); */
+  padding: 5px;
+  justify-content: center;
+}
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  /* border: 1px solid rgba(0, 0, 0, 0.8); */
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  box-shadow: 0px 10px 10px lightgray;
+  border-radius: 25px;
+}
+.span-two-columns {
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toggleDiv{
+  margin: 10px;
+}
+
+.header {
+            padding: 10px; 
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+#legend{
+  text-align: left;
+  padding: 20px;
+}
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
@@ -97,27 +144,49 @@
 </head>
 <!-- WorldMap view module: -->
 <body onload="loadCSV_chord(2020)">
-    <h1>Energy something</h1>
-    <div id="content"></div>
-    <div id="mapLegend"></div>
+  <div class="header grid-item">
+    <h1 id="projectTitle"> Energy Title thingy</h1>
+    <!-- Import/export toggle -->
+    <div class="toggleDiv">
+      <input type="checkbox" id="toggle" class="toggleCheckbox" />
+      <label for="toggle" class='toggleContainer'>
+          <div>Export</div>
+          <div>Import</div>
+      </label>
+    </div>
 
-    <input type="checkbox" id="toggle" class="toggleCheckbox" />
-    <label for="toggle" class='toggleContainer'>
-        <div>Export</div>
-        <div>Import</div>
-    </label>
-
-    <h1>Trade something</h1>
-
-    <div id="my_dataviz"></div>
-
-
-    <div id="legend"></div>
-    <div class="lineGraph" id="overTimeGraph"></div>
+    <!-- Year slider -->
     <label for="yearSlider">Year:</label>
-    <br>
     <input type="range" min="1990" max="2021" value="2012" id="yearSlider">
     <div id="yearSliderNumber"></div>
+  </div>
+
+  <div class="grid-container">
+    <div class="grid-item">
+      <!-- World Map (top left) -->
+      <h2>Europe map</h2>
+      <div id="content"></div>
+      <div id="mapLegend"></div>
+    </div>
+
+    <div class="grid-item">
+      <!-- Line graph (top right) -->
+      <div id="legend">
+        <h2>Selected: </h2>
+        <svg></svg></div>
+      <div class="lineGraph" id="overTimeGraph"></div>
+    </div>
+
+    <div class="grid-item">
+      <!-- Chord Diagram (bottom left) -->
+      <h1>Trade something</h1>
+      <div id="my_dataviz"></div>
+    </div>  
+
+    <!-- Sankey (bottom right) -->
+    <div class="grid-item">Sankey()</div>
+  </div>
+    
 </body>
 
 </html>
