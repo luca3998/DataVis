@@ -133,19 +133,36 @@
   text-align: left;
   padding: 20px;
 }
+
+.info-button {
+            cursor: pointer;
+            font-size: 20px;
+            position: relative; 
+}
+
+.info-popup {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
 <script type = "module" src = "scripts/script.js"></script>
 <script type = "module" src="scripts/chord_dia.js" defer></script>
-
+<script type = "module" src="scripts/hoverPopup.js"></script>
 
 
 </head>
 <!-- WorldMap view module: -->
 <body onload="loadCSV_chord(2020)">
   <div class="header grid-item">
-    <h1 id="projectTitle"> Energy Title thingy</h1>
+    <h1 id="projectTitle"> Energy Title thingy</h1> <br>
+    <h3 style="position: absolute; top:60px; left:50px;">Hover over the chart titles for more information.</h3>
     <!-- Import/export toggle -->
     <div class="toggleDiv">
       <input type="checkbox" id="toggle" class="toggleCheckbox" />
@@ -164,13 +181,16 @@
   <div class="grid-container">
     <div class="grid-item">
       <!-- World Map (top left) -->
-      <h2>Europe map</h2>
+      <h2 class="info-button" data-popup-id="popup-1">Europe map</h2>
+      <div class="info-popup" id="popup-1">This chart shows you a map of europe. <br> Click a country to select it and show more details in the other charts.</div>
       <div id="content"></div>
       <div id="mapLegend"></div>
     </div>
 
     <div class="grid-item">
       <!-- Line graph (top right) -->
+      <h2 class="info-button" data-popup-id="popup-2">Import/export</h2>
+        <div class="info-popup" id="popup-2">This line chart shows the import/export over time for the countries you select.</div>
       <div id="legend">
         <h2>Selected: </h2>
         <svg></svg></div>
@@ -178,13 +198,17 @@
     </div>
 
     <div class="grid-item">
+      <h2 class="info-button" data-popup-id="popup-3">Import/export per country</h2>
+      <div class="info-popup" id="popup-3">This chart shows the partner countries of the countries you have selected. </div>
       <!-- Chord Diagram (bottom left) -->
-      <h1>Trade something</h1>
       <div id="my_dataviz"></div>
     </div>  
 
     <!-- Sankey (bottom right) -->
-    <div class="grid-item">Sankey()</div>
+    <div class="grid-item">
+      <h2 class="info-button" data-popup-id="popup-4">Sankey diagram</h2>
+      <div class="info-popup" id="popup-4">This chart shows the partner countries of the countries you have selected in more detail. </div>
+    </div>
   </div>
     
 </body>
