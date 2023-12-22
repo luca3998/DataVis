@@ -250,12 +250,12 @@ document.addEventListener('DOMContentLoaded', function() {
     handleSliderChange();
 });
 
-function updateCountry(country, add) {
+export function updateCountry(country, add) {
     d3.csv(dataset_total).then(function (allData) {
         // Reset legend
         d3.select("#legend").select("svg").remove();
         const legend = d3.select("#legend").append("svg");
-
+        
         // Update graphs
         getCountryCode(country, function(countryCode) {
             const data = allData.filter(function(row) {
