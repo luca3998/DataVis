@@ -15,43 +15,39 @@ function handleSliderChange() {
     reloadFigure()
 }
 
-// Add an event listener to the slider to react to changes
+//React to changes in slider
 document.addEventListener('DOMContentLoaded', function () {
-    // Ensure the DOM is fully loaded
-    // Attach the event listener to the slider
     document.getElementById("yearSlider").addEventListener("input", handleSliderChange);
-    // You can also perform any initial actions when the page loads
     handleSliderChange();
 });
 
 // Function to handle the import value change
 function handleImportChange() {
     is_import_local = getImportValue();
-    console.log('Current import value:', is_import_local);
     reloadFigure();
 }
 
-// Attach the event listener to the custom event
+//React to changes in import/export button
 document.addEventListener("is_import_value_changed", handleImportChange);
 
-
+//Reload figure with newly updated country list
 function handleCountryChange() {
     countries_chord = getCountries();
     reloadFigure();
 }
 
+//React to changes in array of selected countries
 document.addEventListener("countryArrayChange", handleCountryChange)
 
+// Function to reload the entire figure with the new data, called when one of the global variables changes
+// such as export/import, selected countries or slider value
 function reloadFigure() {
-    // You can add any additional logic or modifications needed before reloading the figure
-    console.log(sliderValue)
-    loadCSV_chord(); // Assuming sliderNumber is defined
+    loadCSV_chord();
 }
 
 
-// Load the CSV data
+// Load the CSV data according to the value of the is_import_local variable and call the function to draw the diagram
 function loadCSV_chord() {
-    console.log(is_import_local)
     if (is_import_local === 1) {
         filepath_chord = `datasets/elec_import/elec_import_${sliderValue}.csv`;
     }
@@ -63,6 +59,7 @@ function loadCSV_chord() {
     drawChordDiagram();
 }
 
+//Draw the d3 chord diagram 
 function drawChordDiagram() {
     if (!d3.select("#my_dataviz").select("svg").empty()) {
         d3.select("#my_dataviz").select("svg").remove();
@@ -85,7 +82,7 @@ function drawChordDiagram() {
         d3.csv(filepath_chord, function (data) {
             var entities = data.columns.slice(1);
 
-            // Convert the data to a matrix format
+            // Convert the data to a matrix format as required by the d3 chord diagram
             var matrix = data.map(function (row) {
                 return entities.map(function (entity) {
                     return +row[entity];
@@ -96,8 +93,6 @@ function drawChordDiagram() {
                 .padAngle(0.05)
                 .sortSubgroups(d3.descending)
                 (matrix);
-
-            // ...
 
             var group = svg
                 .datum(res)
@@ -114,7 +109,7 @@ function drawChordDiagram() {
                     .innerRadius(200)
                     .outerRadius(210)
                 );
-
+            //Print names of the countries on the arcs
             group.append("text")
                 .each(function (d) { d.angle = (d.startAngle + d.endAngle) / 2; })
                 .attr("dy", ".35em")
@@ -133,8 +128,6 @@ function drawChordDiagram() {
                     return countryIndex !== -1 ? countriesData[countryIndex].country_name : "";
                 });
 
-            // ...
-
             svg
                 .datum(res)
                 .append("g")
@@ -147,17 +140,16 @@ function drawChordDiagram() {
                     .radius(200)
                 )
                 .style("fill", function (d) {
-                    // Reuse the color calculation logic from arcs for ribbons
                     return colorScale(entities[d.source.index]);
                 })
                 .style("stroke", "black")
                 .style("opacity", function () {
                     // Check if countries_chord array is empty
-                    return countries_chord.length === 0 ? 1 : 0; // Set opacity to 1 if empty, else 0
+                    // Set opacity to 1 if empty, else 0
+                    return countries_chord.length === 0 ? 1 : 0;
                 });
 
-            // ...
-
+            // Set the color of the ribbon to the color of the source country (the country that is selected)
             countries_chord.forEach(function (country) {
                 var countryIndex = entities.indexOf(country);
                 if (countryIndex !== -1) {
