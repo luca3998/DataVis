@@ -2,7 +2,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import *  as overTime from "./overtime.js";
 import worldMap from "../europe.json" assert { type: 'json' };
 import {colors, dataset, selectedCountries,countryArray, slider, total_import, country_data, total_export,getImportValue, getSliderValue} from "./global.js";
-
+import { checkAllCountries } from "./checkbox.js";
 
 // This part renders the map on screen
 const projection = d3.geoEquirectangular()
@@ -99,7 +99,7 @@ function loadMap(){
             .attr("fill", d => {
                 const geocode = d.properties.iso_a2_eh;
                 const value = filteredData.filter(d => d['geo'] === geocode);
-                console.log("VALUE: " + geocode + " " + value);
+                //console.log("VALUE: " + geocode + " " + value);
                 if (value[0]) {
                     // Use the found country data to determine the color
                     const result = value[0]['OBS_VALUE'];
@@ -222,6 +222,8 @@ function handleCountryClick(event, d) {
                 countryArray.splice(index, 1);
                 updateCountry(countryName, false);
             }
+            console.log(countryArray)
+            checkAllCountries();
     });
 }
 
