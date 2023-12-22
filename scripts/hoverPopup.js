@@ -9,11 +9,13 @@ infoButtons.on("mouseover", function() {
     // Find the corresponding popup
     var popup = d3.select("#" + popupId);
 
-    // Get position of the info button
-    var rect = this.getBoundingClientRect();
-    var x = rect.left + window.scrollX + 200;
-    var y = rect.bottom + window.scrollY;
+    // // Get position of the info button
+    // var rect = this.getBoundingClientRect();
+    // var x = rect.left + window.scrollX + 200;
+    // var y = rect.bottom + window.scrollY;
 
+    var x = d3.event.pageX + 10;
+    var y = d3.event.pageY + 10;
     // Show the corresponding popup at the button position
     popup
         .style("left", x + "px")

@@ -13,7 +13,7 @@ const path = d3.geoPath()
 
 const width = 700;
 const height = 600;
-var dataset_total = total_import;
+var dataset_total = total_export;
 var is_import_local = 1;
 var sliderValue =  2000;
 
@@ -131,25 +131,6 @@ function loadMap(){
 loadMap();
 overTime.overTImeView();
 
-// Not in use yet 
-function countryHasData(country){
-    d3.csv(dataset_total).then(function(data) {
-        // Check if targetValue is present in the "columnName" column
-        let isValuePresent = data.some(function(d) {
-          return d.geo === country;
-        });
-      
-        if (isValuePresent) {
-          console.log(`The value "${country}" is present in the column.`);
-          return isValuePresent;
-        } else {
-          console.log(`The value "${country}" is not present in the column.`);
-          return isValuePresent;
-        }
-      }).catch(function(error) {
-        console.error('Error loading CSV data:', error);
-      });
-}
 
 function getCountryCode(targetCountryName, callback) {
     d3.csv(country_data).then(function(data) {
