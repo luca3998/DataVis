@@ -6,20 +6,15 @@ const sankeyMargin = {top: 10, right: 100, bottom: 10, left: 100},
     sankeyWidth = 700  - sankeyMargin.left - sankeyMargin.right,
     sankeyHeight = 450 - sankeyMargin.top - sankeyMargin.bottom;
 
-let importAmount = 0;
-
 export var selectedCountry = "NL";
 let select = document.getElementById('countrySelect');
 
-const exportSankey = d3.sankey()
+const sankey = d3.sankey()
     .size([sankeyWidth, sankeyHeight]);
 
-const importSankey = d3.sankey()
-    .size([sankeyWidth, sankeyHeight]);
+let svg;
 
-let importSvg;
-let exportSvg;
-
+let current_import = 0;
 let current_dataset = "../datasets/nrg_te_eh_linear.csv"
 
 d3.csv("countries.csv", function (countries) {
@@ -35,29 +30,23 @@ d3.csv("countries.csv", function (countries) {
 });
 
 function sankeyView() {
-    if(!d3.select("#sankeyExport").empty()){
-        importAmount = 0;
-        d3.select("#sankeyImport").remove();
-        d3.select("#sankeyExport").remove();
+    if(!d3.select("#sankey").empty()){
+        d3.select("#sankey").remove();
     }
 
-    importSvg = d3.select("#sankeyView").append("svg")
-        .attr("id", "sankeyImport")
+    svg = d3.select("#sankeyView").append("svg")
+        .attr("id", "sankey")
         .attr("width", sankeyWidth + sankeyMargin.left + sankeyMargin.right)
         .attr("height", sankeyHeight + sankeyMargin.top + sankeyMargin.bottom)
         .append("g")
         .attr("transform",
             "translate(" + sankeyMargin.left + "," + sankeyMargin.top + ")");
 
-    exportSvg = d3.select("#sankeyView").append("svg")
-        .attr("id", "sankeyExport")
-        .attr("width", sankeyWidth + sankeyMargin.left + sankeyMargin.right)
-        .attr("height", sankeyHeight + sankeyMargin.top + sankeyMargin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + sankeyMargin.left + "," + sankeyMargin.top + ")");
-    sankeyImport();
-    sankeyExport();
+    if (current_import) {
+        sankeyImport();
+    } else {
+        sankeyExport();
+    }
     countryGraphView(current_dataset);
 }
 
@@ -87,7 +76,7 @@ function sankeyImport() {
             });
         });
 
-        generateSankey(graph, importSankey, importSvg)
+        generateSankey(graph)
     })
 }
 
@@ -112,7 +101,7 @@ function sankeyExport() {
             });
         });
 
-        generateSankey(graph, exportSankey, exportSvg)
+        generateSankey(graph)
     })
 }
 
@@ -126,18 +115,11 @@ function filterData(data) {
     ));
 }
 
-function generateSankey(graph, sankey, svg) {
+function generateSankey(graph) {
     sankey
         .nodes(graph.nodes)
         .links(graph.links)
         .layout(1)
-
-    if (importAmount === 0) {
-        importAmount = sankey.nodes()[0].value;
-    } else {
-        sankey.nodes()[0].dx = sankey.nodes()[0].value / importAmount * sankey.nodeWidth();
-    }
-
 
     d3.csv("countries.csv", function (countries) {
         svg.append("g").attr("class", "links")
@@ -230,16 +212,18 @@ function generateSankey(graph, sankey, svg) {
 }
 
 slider.addEventListener("change", function() {
-    importAmount = 0;
-    updateImportSankey();
-    updateExportSankey();
+    if (current_import) {
+        updateImportSankey();
+    } else {
+        updateExportSankey();
+    }
 });
 
 function updateImportSankey() {
     d3.csv("../datasets/nrg_ti_eh_linear.csv", function (allData) {
         const data = filterData(allData)
 
-        const graph = {"nodes": importSankey.nodes(), "links": importSankey.links()};
+        const graph = {"nodes": sankey.nodes(), "links": sankey.links()};
 
         // Remove unused nodes and links
         graph.nodes = graph.nodes.filter(n => n.name === selectedCountry || data.filter(d => d.partner === n.name).length > 0)
@@ -266,7 +250,7 @@ function updateImportSankey() {
             }
         });
 
-        updateSankey(graph, importSankey, importSvg)
+        updateSankey(graph)
     })
 }
 
@@ -274,7 +258,7 @@ function updateExportSankey() {
     d3.csv("../datasets/nrg_te_eh_linear.csv", function (allData) {
         const data = filterData(allData)
 
-        const graph = {"nodes": exportSankey.nodes(), "links": exportSankey.links()};
+        const graph = {"nodes": sankey.nodes(), "links": sankey.links()};
 
         // Remove unused nodes and links
         graph.nodes = graph.nodes.filter(n => data.filter(d => d.partner === n.name).length > 0 || n.name === selectedCountry)
@@ -301,21 +285,15 @@ function updateExportSankey() {
             }
         });
 
-        updateSankey(graph, exportSankey, exportSvg)
+        updateSankey(graph)
     })
 }
 
-function updateSankey(graph, sankey, svg) {
+function updateSankey(graph) {
     sankey
         .nodes(graph.nodes)
         .links(graph.links)
         .layout(1)
-
-    if (importAmount === 0) {
-        importAmount = sankey.nodes()[0].value;
-    } else {
-        sankey.nodes()[0].dx = sankey.nodes()[0].value / importAmount * sankey.nodeWidth();
-    }
 
     d3.csv("countries.csv", function (countries) {
         const links = svg.select(".links").selectAll(".link")
@@ -481,11 +459,14 @@ function updateSankey(graph, sankey, svg) {
 document.getElementById("toggle").addEventListener("change",function(){
     const is_import = this.checked ? 1 : 0;
     if (is_import) {
+        current_import = 1;
         current_dataset = "../datasets/nrg_ti_eh_linear.csv"
     }
     else {
+        current_import = 0;
         current_dataset = "../datasets/nrg_te_eh_linear.csv"
     }
+    sankeyView();
     countryGraphView(current_dataset)
 });
 
