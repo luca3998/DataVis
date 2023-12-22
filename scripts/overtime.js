@@ -111,7 +111,7 @@ function overTImeView() {
 }
 
 slider.addEventListener("input", function() {
-    d3.selectAll(".yearLine")
+    d3.select("#overTimeGraph").selectAll(".yearLine")
         .transition().ease(d3.easePolyOut)
         .duration(transitionTime)
         .attr("x1", xAxis(this.value))
