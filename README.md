@@ -1,4 +1,4 @@
-# DataVis
+# DataVis: Electricity import and export of EU countries
 Data Visualisation project (infoVis)
 
 DISCLAIMER
