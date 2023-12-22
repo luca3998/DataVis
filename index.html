@@ -68,7 +68,7 @@
 
 
   #projectTitle{
-    position: absolute; 
+    position: absolute;
     left:50px;
     font-size: 30px;
   }
@@ -129,7 +129,7 @@
    color: white;
    transition: color 0.3s;
  }
-      
+
  .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -160,7 +160,7 @@
 }
 
 .header {
-            padding: 10px; 
+            padding: 10px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -174,7 +174,7 @@
 .info-button {
             cursor: pointer;
             font-size: 20px;
-            position: relative; 
+            position: relative;
             margin: auto;
             max-width: 300px;
 }
@@ -196,18 +196,19 @@
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/sankey.js"></script>
 <script type = "module" src = "scripts/script.js"></script>
 <script type = "module" src="scripts/chord_dia.js" defer></script>
 <script type = "module" src="scripts/hoverPopup.js"></script>
 
 <script type="module">
     import { toggleDropdown, updateSelectedCountries } from "./scripts/checkbox.js";
-  
+
     // Use the imported functions in the global scope
     window.toggleDropdown = toggleDropdown;
     window.updateSelectedCountries = updateSelectedCountries;
   </script>
-  
+
 </head>
 <!-- WorldMap view module: -->
 <body onload="loadCSV_chord(2020)">
@@ -233,7 +234,7 @@
       <!-- World Map (top left) -->
       <h2 class="info-button" data-popup-id="popup-1">Europe map</h2>
       <div class="info-popup" id="popup-1">This chart shows you a map of europe. <br> Click a country to select it and show more details in the other charts.</div>
-      
+
       <div class="dropdown">
         <button onclick="toggleDropdown()">Select countries</button>
         <div class="dropdown-content" id="myDropdown">
@@ -363,7 +364,7 @@
           <!-- Add more checkboxes as needed -->
         </div>
       </div>
-      
+
       <div id="content"></div>
       <div id="mapLegend"></div>
     </div>
@@ -383,15 +384,21 @@
       <div class="info-popup" id="popup-3">This chart shows the partner countries of the countries you have selected. </div>
       <!-- Chord Diagram (bottom left) -->
       <div id="my_dataviz"></div>
-    </div>  
+    </div>
 
     <!-- Sankey (bottom right) -->
     <div class="grid-item">
-      <h2 class="info-button" data-popup-id="popup-4">Sankey diagram</h2>
-      <div class="info-popup" id="popup-4">This chart shows the partner countries of the countries you have selected in more detail. </div>
+        <h2 class="info-button" data-popup-id="popup-4">Sankey diagram</h2>
+        <div class="info-popup" id="popup-4">This chart shows the partner countries of the countries you have selected in more detail. </div>
+
+        <div id="countryInfo">
+            <select id="countrySelect"></select>
+            <div id="sankeyView"></div>
+            <div id="countryGraph"></div>
+        </div>
     </div>
   </div>
-    
+
 </body>
 
 </html>
