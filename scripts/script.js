@@ -68,6 +68,11 @@ function loadLegend(colorScale, maxVal){
     .attr('y', 35)
     .text(d => (Math.round(((d / numSteps) * maxVal) / 1000) * 1000) ); // Display the corresponding value
 
+    svg.append('text')
+    .attr('x', 550)
+    .attr('y', 35)
+    .text("GWh"); 
+
     // Icon for countries that do not have data
     svg.append('rect')
     .attr('width', 20)
