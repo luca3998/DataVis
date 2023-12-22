@@ -1,21 +1,21 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import {selectedCountries, total_import, total_export, getImportValue, slider, transitionTime} from "./global.js";
+import { selectedCountries, total_import, total_export, getImportValue, slider, transitionTime } from "./global.js";
 import { getCountryColor } from "./script.js";
 
 // set the dimensions and margins of the graph
-const overTimeMargin = {top: 10, right: 30, bottom: 90, left: 60},
+const overTimeMargin = { top: 10, right: 30, bottom: 90, left: 60 },
     overTimeWidth = 1200 - overTimeMargin.left - overTimeMargin.right,
     overTimeHeight = 600 - overTimeMargin.top - overTimeMargin.bottom;
 
 // X axis
 const xAxis = d3.scalePoint()
-    .range([ 0, overTimeWidth ])
+    .range([0, overTimeWidth])
     .domain([])
 
 // Y axis
 const yAxis = d3.scaleLinear()
     .domain([])
-    .range([ overTimeHeight, 0]);
+    .range([overTimeHeight, 0]);
 
 var dataset = total_export;
 var maxY = 0;
@@ -24,14 +24,14 @@ var is_import_local = 1;
 // Function to handle the import value change
 function handleImportChange() {
     is_import_local = getImportValue();
-    console.log('Current import value:', is_import_local);
     updateDataset();
 }
 
-function updateDataset(){
-    if(is_import_local){
+// Function that updates the used dataset based on user setting for import and export
+function updateDataset() {
+    if (is_import_local) {
         dataset = total_import;
-    } else{
+    } else {
         dataset = total_export;
     }
 }
@@ -49,29 +49,29 @@ function overTImeView() {
     d3.csv(dataset).then(function (data) {
 
         // X axis
-        // xAxis.domain([d3.min(data, d => d.TIME_PERIOD), d3.max(data, d => d.TIME_PERIOD)] );
         xAxis.domain(data.map(d => d.TIME_PERIOD).sort((a, b) => a - b));
         svg.select(".xAxis")
-        .call(d3.axisBottom(xAxis));
+            .call(d3.axisBottom(xAxis));
 
         // Update Y axis
         const maxVal = Math.max(...data.map(d => d.OBS_VALUE))
-        if(maxVal > maxY){
+        if (maxVal > maxY) {
             maxY = maxVal;
         }
         yAxis.domain([0, maxVal + maxVal * 0.1])
         svg.select(".yAxis").call(d3.axisLeft(yAxis));
 
+        // Add axes to the graph
         svg.append("g")
             .attr("class", "xAxis")
             .attr("transform", "translate(0," + overTimeHeight + ")")
             .call(d3.axisBottom(xAxis));
 
-
         svg.append("g")
             .attr("class", "yAxis")
             .call(d3.axisLeft(yAxis));
 
+        // Adds year line 
         svg.append("line")
             .attr("class", "yearLine")
             .attr("fill", "none")
@@ -84,18 +84,18 @@ function overTImeView() {
 
         // Add slider value to sliding line
         svg.append("text")
-        .attr("class", "yearValue")
-        .attr("fill", "rgba(255,128,0,0.5)")
-        .attr("x", xAxis(slider.value))
-        .attr("y", 10)
-        .attr("font-size", "15px")
-        .text("");
+            .attr("class", "yearValue")
+            .attr("fill", "rgba(255,128,0,0.5)")
+            .attr("x", xAxis(slider.value))
+            .attr("y", 10)
+            .attr("font-size", "15px")
+            .text("");
 
         // Add x-axis title
         svg.append("text")
-        .attr("transform", "translate(500, 550)")
-        .style("text-anchor", "middle")
-        .text("Year");
+            .attr("transform", "translate(500, 550)")
+            .style("text-anchor", "middle")
+            .text("Year");
 
         // Add y-axis title
         svg.append("text")
@@ -110,7 +110,8 @@ function overTImeView() {
     })
 }
 
-slider.addEventListener("input", function() {
+// EventListener to move the line along with the slider value
+slider.addEventListener("input", function () {
     d3.select("#overTimeGraph").selectAll(".yearLine")
         .transition().ease(d3.easePolyOut)
         .duration(transitionTime)
@@ -124,19 +125,19 @@ slider.addEventListener("input", function() {
         .text(slider.value)
 });
 
-
+// This function makes sure the line chart gets updated. 
 function updateOverTime(country, countryCode, add, data) {
     const svg = d3.select("#overTimeGraph").select("svg").select("g");
-    
+
     if (!add) {
         // Remove old country line
         const toRemove = svg.select("." + country + "Data");
         toRemove.transition()
-        .duration(transitionTime)  // Animation duration
-        .style("opacity", 0)  // Fade out
-        .remove();
+            .duration(transitionTime)
+            .style("opacity", 0)
+            .remove();
     } else {
-        getCountryColor(country, function(currentCountryColor) {
+        getCountryColor(country, function (currentCountryColor) {
             // Add country line
             svg.append("path")
                 .attr("class", country + "Data")
@@ -154,10 +155,10 @@ function updateOverTime(country, countryCode, add, data) {
                         return yAxis(d.OBS_VALUE)
                     })
                 );
-            });
+        });
     }
 
 
 }
 
-export {overTImeView, updateOverTime};
+export { overTImeView, updateOverTime };
