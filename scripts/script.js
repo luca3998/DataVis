@@ -6,14 +6,14 @@ import { checkAllCountries } from "./checkbox.js";
 
 // This part renders the map on screen
 const projection = d3.geoEquirectangular()
-.scale(150);
+.scale(230);
 
 const path = d3.geoPath()
 .projection(projection);
 
 const width = 700;
-const height = 300;
-var dataset_total = total_import;
+const height = 600;
+var dataset_total = total_export;
 var is_import_local = 1;
 var sliderValue =  2000;
 
@@ -79,7 +79,7 @@ function loadMap(){
         .append("svg")
         .attr("width", width)
         .attr("height", height)
-        .attr("viewBox", "350 0 300 200");
+        .attr("viewBox", "350 0 300 100");
 
     d3.json("europe.json").then(function(data) {
         // Draw the map
@@ -109,8 +109,8 @@ function loadMap(){
                     svg.append('defs')
                         .append('pattern')
                         .attr('id', 'stripes')
-                        .attr('width', 8)
-                        .attr('height', 8)
+                        .attr('width', 2)
+                        .attr('height', 2)
                         .attr('patternUnits', 'userSpaceOnUse')
                         .attr('patternTransform', 'rotate(45)')
                         .append('rect')
@@ -121,7 +121,9 @@ function loadMap(){
                     return 'url(#stripes)' ; 
                 }
             })
-            .on("click", handleCountryClick);
+            .on("click", handleCountryClick)
+            .on("mouseout",mouseHoverOut)
+            .on("mouseover", mouseHover);
         });
     });
 }
@@ -129,25 +131,6 @@ function loadMap(){
 loadMap();
 overTime.overTImeView();
 
-// Not in use yet 
-function countryHasData(country){
-    d3.csv(dataset_total).then(function(data) {
-        // Check if targetValue is present in the "columnName" column
-        let isValuePresent = data.some(function(d) {
-          return d.geo === country;
-        });
-      
-        if (isValuePresent) {
-          console.log(`The value "${country}" is present in the column.`);
-          return isValuePresent;
-        } else {
-          console.log(`The value "${country}" is not present in the column.`);
-          return isValuePresent;
-        }
-      }).catch(function(error) {
-        console.error('Error loading CSV data:', error);
-      });
-}
 
 function getCountryCode(targetCountryName, callback) {
     d3.csv(country_data).then(function(data) {
@@ -198,10 +181,31 @@ function updateOverview(){
 
 }
 
+function mouseHover(event, d){
+    d3.select(this).style("stroke", "orange");
+}
+
+function mouseHoverOut(event, d){
+    const countryName = d.properties.name;
+    const index = selectedCountries.indexOf(countryName);
+    if(index != -1){
+        d3.select(this).style("stroke", "#333");
+    } else{
+        d3.select(this).style("stroke", "#aaa");
+    }
+}
+
+
 // Handle country click event
 function handleCountryClick(event, d) {
     const countryName = d.properties.name;
     const index = selectedCountries.indexOf(countryName);
+    var currentFillColor = d3.select(this).attr("fill");
+    
+    if(currentFillColor === "url(#stripes)"){
+        alert("No data available for " + countryName + " for this year, select a different country or year.");
+        return;
+    }
     if(index === -1){
         d3.select(this).style("stroke", "#333");
     } else{

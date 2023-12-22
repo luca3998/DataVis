@@ -3,7 +3,7 @@ import {selectedCountries, total_import, total_export, getImportValue, slider, t
 import { getCountryColor } from "./script.js";
 
 // set the dimensions and margins of the graph
-const overTimeMargin = {top: 10, right: 30, bottom: 90, left: 40},
+const overTimeMargin = {top: 10, right: 30, bottom: 90, left: 60},
     overTimeWidth = 800 - overTimeMargin.left - overTimeMargin.right,
     overTimeHeight = 450 - overTimeMargin.top - overTimeMargin.bottom;
 
@@ -17,7 +17,7 @@ const yAxis = d3.scaleLinear()
     .domain([])
     .range([ overTimeHeight, 0]);
 
-var dataset = total_import;
+var dataset = total_export;
 var maxY = 0;
 var is_import_local = 1;
 
@@ -49,7 +49,18 @@ function overTImeView() {
     d3.csv(dataset).then(function (data) {
 
         // X axis
-        xAxis.domain([d3.min(data, d => d.TIME_PERIOD), d3.max(data, d => d.TIME_PERIOD)] )
+        // xAxis.domain([d3.min(data, d => d.TIME_PERIOD), d3.max(data, d => d.TIME_PERIOD)] );
+        xAxis.domain(data.map(d => d.TIME_PERIOD).sort((a, b) => a - b));
+        svg.select(".xAxis")
+        .call(d3.axisBottom(xAxis));
+
+        // Update Y axis
+        const maxVal = Math.max(...data.map(d => d.OBS_VALUE))
+        if(maxVal > maxY){
+            maxY = maxVal;
+        }
+        yAxis.domain([0, maxVal + maxVal * 0.1])
+        svg.select(".yAxis").call(d3.axisLeft(yAxis));
 
         svg.append("g")
             .attr("class", "xAxis")
@@ -65,11 +76,35 @@ function overTImeView() {
             .attr("class", "yearLine")
             .attr("fill", "none")
             .attr("stroke", "rgba(255,128,0,0.5)")
-            .attr("stroke-width", 1.5)
+            .attr("stroke-width", 3)
             .attr("x1", xAxis(slider.value))
             .attr("y1", 0)
             .attr("x2", xAxis(slider.value))
             .attr("y2", overTimeHeight);
+
+        // Add slider value to sliding line
+        svg.append("text")
+        .attr("class", "yearValue")
+        .attr("fill", "rgba(255,128,0,0.5)")
+        .attr("x", xAxis(slider.value))
+        .attr("y", 10)
+        .attr("font-size", "15px")
+        .text("");
+
+        // Add x-axis title
+        svg.append("text")
+        .attr("transform", "translate(300, 400)")
+        .style("text-anchor", "middle")
+        .text("Year");
+
+        // Add y-axis title
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - 60)
+            .attr("x", 0 - 150)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("GWh");
 
         d3.select("#overTimeLegend").append("svg")
     })
@@ -81,6 +116,12 @@ slider.addEventListener("input", function() {
         .duration(transitionTime)
         .attr("x1", xAxis(this.value))
         .attr("x2", xAxis(this.value))
+
+    d3.selectAll(".yearValue")
+        .transition().ease(d3.easePolyOut)
+        .duration(transitionTime)
+        .attr("x", xAxis(this.value) + 10)
+        .text(slider.value)
 });
 
 
@@ -90,16 +131,22 @@ function updateOverTime(country, countryCode, add, data) {
     if (!add) {
         // Remove old country line
         const toRemove = svg.select("." + country + "Data");
-        toRemove.remove();
+        toRemove.transition()
+        .duration(transitionTime)  // Animation duration
+        .style("opacity", 0)  // Fade out
+        .remove();
     } else {
         getCountryColor(country, function(currentCountryColor) {
             // Add country line
+
             svg.append("path")
                 .attr("class", country + "Data")
                 .datum(data.filter(d => d.geo === countryCode))
                 .attr("fill", "none")
+                .transition().ease(d3.easePolyOut)
+                .duration(transitionTime)
                 .attr("stroke", currentCountryColor)
-                .attr("stroke-width", 1.5)
+                .attr("stroke-width", 2)
                 .attr("d", d3.line()
                     .x(function (d) {
                         return xAxis(d.TIME_PERIOD)
@@ -111,41 +158,6 @@ function updateOverTime(country, countryCode, add, data) {
             });
     }
 
-    // Update X axis
-    xAxis.domain(data.map(d => d.TIME_PERIOD));
-
-    svg.select(".xAxis")
-        .transition().ease(d3.easePolyOut)
-        .duration(transitionTime)
-        .call(d3.axisBottom(xAxis));
-
-    // Update Y axis
-    const maxVal = Math.max(...data.map(d => d.OBS_VALUE))
-    if(maxVal > maxY){
-        maxY = maxVal;
-    }
-    yAxis.domain([0, maxY + maxY * 0.1])
-
-    svg.select(".yAxis")
-        .transition().ease(d3.easePolyOut)
-        .duration(transitionTime)
-        .call(d3.axisLeft(yAxis));
-
-    // Update lines for potential new Y-axis domain
-    selectedCountries.forEach(selCountry => {
-        const countrySVG = svg.select("." + selCountry + "Data")
-        countrySVG
-            .transition().ease(d3.easePolyOut)
-            .duration(transitionTime)
-            .attr("d", d3.line()
-                .x(function (d) {
-                    return xAxis(d.TIME_PERIOD)
-                })
-                .y(function (d) {
-                    return yAxis(d.OBS_VALUE)
-                })
-            )
-    })
 
 }
 
