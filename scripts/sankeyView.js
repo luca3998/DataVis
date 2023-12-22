@@ -564,6 +564,15 @@ function countryGraphView(dataset) {
                             return yAxis(d.OBS_VALUE)
                         })
                     );
+
+                // Add slider value to sliding line
+                svg.append("text")
+                    .attr("class", "yearValue")
+                    .attr("fill", "rgba(255,128,0,0.5)")
+                    .attr("x", xAxis(slider.value))
+                    .attr("y", 10)
+                    .attr("font-size", "15px")
+                    .text("");
             });
         })
     });
@@ -575,7 +584,7 @@ function countryGraphView(dataset) {
             .attr("x1", xAxis(this.value))
             .attr("x2", xAxis(this.value))
 
-        d3.selectAll(".yearValue")
+        d3.select("#countryGraph").selectAll(".yearValue")
             .transition().ease(d3.easePolyOut)
             .duration(transitionTime)
             .attr("x", xAxis(this.value) + 10)

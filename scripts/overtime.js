@@ -117,7 +117,7 @@ slider.addEventListener("input", function() {
         .attr("x1", xAxis(this.value))
         .attr("x2", xAxis(this.value))
 
-    d3.selectAll(".yearValue")
+    d3.select("#overTimeGraph").selectAll(".yearValue")
         .transition().ease(d3.easePolyOut)
         .duration(transitionTime)
         .attr("x", xAxis(this.value) + 10)
