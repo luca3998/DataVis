@@ -484,9 +484,7 @@ const xAxis = d3.scalePoint()
     .domain(Array.from({length: max_year+1 - min_year}, (x, i) => i + min_year));
 
 function countryGraphView(dataset) {
-    if(!d3.select("#countryGraph").empty()){
-        d3.select("#countryGraph").select("svg").remove();
-    }
+    d3.select("#countryGraph").select("svg").remove();
 
     var svg=d3.select('#countryGraph').append('svg')
         .attr('width', graphWidth + graphMargin.left + graphMargin.right)
@@ -570,13 +568,5 @@ function countryGraphView(dataset) {
         })
     });
 }
-
-slider.addEventListener("input", function() {
-    d3.selectAll(".yearLine")
-        .transition().ease(d3.easePolyOut)
-        .duration(transitionTime)
-        .attr("x1", xAxis(this.value))
-        .attr("x2", xAxis(this.value))
-});
 
 export {sankeyView, countryGraphView}
