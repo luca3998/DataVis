@@ -37,7 +37,6 @@ document.addEventListener("is_import_value_changed", handleImportChange);
 
 function handleCountryChange() {
     countries_chord = getCountries();
-    console.log('Current countries value:', countries_chord);
     reloadFigure();
 }
 
