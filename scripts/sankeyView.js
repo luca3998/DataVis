@@ -18,7 +18,15 @@ let current_import = 0;
 let current_dataset = "datasets/nrg_te_eh_linear.csv"
 
 d3.csv("countries.csv", function (countries) {
-    countries.forEach(c => {
+    countries.sort((a, b) => {
+        if (a.country_name < b.country_name){
+            return -1;
+        } else if (a.country_name > b.country_name){
+            return 1;
+        } else {
+            return 0;
+        }
+    }).forEach(c => {
         const option = document.createElement('option');
         option.value = c.country_code;
         option.innerHTML = c.country_name;
