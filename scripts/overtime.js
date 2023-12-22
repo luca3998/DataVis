@@ -4,8 +4,8 @@ import { getCountryColor } from "./script.js";
 
 // set the dimensions and margins of the graph
 const overTimeMargin = {top: 10, right: 30, bottom: 90, left: 60},
-    overTimeWidth = 800 - overTimeMargin.left - overTimeMargin.right,
-    overTimeHeight = 450 - overTimeMargin.top - overTimeMargin.bottom;
+    overTimeWidth = 1200 - overTimeMargin.left - overTimeMargin.right,
+    overTimeHeight = 600 - overTimeMargin.top - overTimeMargin.bottom;
 
 // X axis
 const xAxis = d3.scalePoint()
@@ -93,7 +93,7 @@ function overTImeView() {
 
         // Add x-axis title
         svg.append("text")
-        .attr("transform", "translate(300, 400)")
+        .attr("transform", "translate(500, 550)")
         .style("text-anchor", "middle")
         .text("Year");
 
@@ -101,7 +101,7 @@ function overTImeView() {
         svg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - 60)
-            .attr("x", 0 - 150)
+            .attr("x", 0 - 250)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("GWh");
@@ -138,7 +138,6 @@ function updateOverTime(country, countryCode, add, data) {
     } else {
         getCountryColor(country, function(currentCountryColor) {
             // Add country line
-
             svg.append("path")
                 .attr("class", country + "Data")
                 .datum(data.filter(d => d.geo === countryCode))

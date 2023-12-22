@@ -17,7 +17,6 @@ var dataset_total = total_export;
 var is_import_local = 1;
 var sliderValue =  2000;
 
-
 function updateDataset(){
     if(is_import_local){
         dataset_total = total_import;
@@ -37,6 +36,7 @@ function handleImportChange() {
 // Attach the event listener to the custom event
 document.addEventListener("is_import_value_changed", handleImportChange);
 
+// This function draws the legend for the choropleth
 function loadLegend(colorScale, maxVal){
     if(!d3.select("#mapLegend").select("svg").empty()){
         d3.select("#mapLegend").select("svg").remove();
@@ -67,6 +67,19 @@ function loadLegend(colorScale, maxVal){
     .attr('x', 0)
     .attr('y', 35)
     .text(d => (Math.round(((d / numSteps) * maxVal) / 1000) * 1000) ); // Display the corresponding value
+
+    // Icon for countries that do not have data
+    svg.append('rect')
+    .attr('width', 20)
+    .attr('height', 20)
+    .attr('x', 0)
+    .attr('y', 60)
+    .attr('fill','url(#stripes)');
+
+    svg.append('text')
+    .attr('x', 30)
+    .attr('y', 75)
+    .text("No data available"); 
 }
 
 // Function that loads the worldmap choropleth
