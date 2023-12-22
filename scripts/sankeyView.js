@@ -15,7 +15,7 @@ const sankey = d3.sankey()
 let svg;
 
 let current_import = 0;
-let current_dataset = "../datasets/nrg_te_eh_linear.csv"
+let current_dataset = "datasets/nrg_te_eh_linear.csv"
 
 d3.csv("countries.csv", function (countries) {
     countries.forEach(c => {
@@ -56,7 +56,7 @@ select.addEventListener("change", function () {
 });
 
 function sankeyImport() {
-    d3.csv("../datasets/nrg_ti_eh_linear.csv", function (allData) {
+    d3.csv("datasets/nrg_ti_eh_linear.csv", function (allData) {
         const data = filterData(allData)
 
         const graph = {"nodes": [], "links": []};
@@ -81,7 +81,7 @@ function sankeyImport() {
 }
 
 function sankeyExport() {
-    d3.csv("../datasets/nrg_te_eh_linear.csv", function (allData) {
+    d3.csv("datasets/nrg_te_eh_linear.csv", function (allData) {
         const data = filterData(allData)
 
         var graph = {"nodes": [], "links": []};
@@ -220,7 +220,7 @@ slider.addEventListener("change", function() {
 });
 
 function updateImportSankey() {
-    d3.csv("../datasets/nrg_ti_eh_linear.csv", function (allData) {
+    d3.csv("datasets/nrg_ti_eh_linear.csv", function (allData) {
         const data = filterData(allData)
 
         const graph = {"nodes": sankey.nodes(), "links": sankey.links()};
@@ -255,7 +255,7 @@ function updateImportSankey() {
 }
 
 function updateExportSankey() {
-    d3.csv("../datasets/nrg_te_eh_linear.csv", function (allData) {
+    d3.csv("datasets/nrg_te_eh_linear.csv", function (allData) {
         const data = filterData(allData)
 
         const graph = {"nodes": sankey.nodes(), "links": sankey.links()};
@@ -460,11 +460,11 @@ document.getElementById("toggle").addEventListener("change",function(){
     const is_import = this.checked ? 1 : 0;
     if (is_import) {
         current_import = 1;
-        current_dataset = "../datasets/nrg_ti_eh_linear.csv"
+        current_dataset = "datasets/nrg_ti_eh_linear.csv"
     }
     else {
         current_import = 0;
-        current_dataset = "../datasets/nrg_te_eh_linear.csv"
+        current_dataset = "datasets/nrg_te_eh_linear.csv"
     }
     sankeyView();
     countryGraphView(current_dataset)
