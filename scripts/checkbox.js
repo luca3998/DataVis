@@ -7,6 +7,31 @@ export function toggleDropdown() {
     dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
   }
 
+d3.csv("countries.csv", function (countries) {
+    countries.sort((a, b) => {
+        if (a.country_name < b.country_name){
+            return -1;
+        } else if (a.country_name > b.country_name){
+            return 1;
+        } else {
+            return 0;
+        }
+    }).forEach(c => {
+        const input = document.createElement('input');
+        input.value = c.country_code;
+        input.name = "country";
+        input.type = "checkbox";
+        input.setAttribute('onclick',"updateSelectedCountries(this)");
+
+        const label = document.createElement('label');
+        label.appendChild(input);
+        label.innerHTML += c.country_name;
+
+        var dropdown = document.getElementById("myDropdown");
+        dropdown.appendChild(label);
+    })
+});
+
  export function updateSelectedCountries(checkbox) {
         
             // Check if the checkbox is checked or unchecked
