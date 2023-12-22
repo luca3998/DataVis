@@ -471,7 +471,7 @@ document.getElementById("toggle").addEventListener("change",function(){
 });
 
 // set the dimensions and margins of the graph
-const graphMargin = {top: 10, right: 30, bottom: 90, left: 40},
+const graphMargin = {top: 10, right: 30, bottom: 90, left: 60},
     graphWidth = 800 - graphMargin.left - graphMargin.right,
     graphHeight = 450 - graphMargin.top - graphMargin.bottom;
 
@@ -573,6 +573,22 @@ function countryGraphView(dataset) {
                     .attr("y", 10)
                     .attr("font-size", "15px")
                     .text("");
+
+                // Add x-axis title
+                svg.append("text")
+                    .attr("y", graphHeight + 50)
+                    .attr("x", (graphWidth/2))
+                    .style("text-anchor", "middle")
+                    .text("Year");
+
+                // Add y-axis title
+                svg.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0 - 60)
+                    .attr("x", -(graphHeight/2))
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .text("GWh");
             });
         })
     });
