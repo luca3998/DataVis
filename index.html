@@ -34,7 +34,42 @@
 #container {
     display: flex;
 }
+   /* Style the dropdown container */
+   .dropdown {
+      position: relative;
+      display: inline-block;
+    }
 
+    /* Style the dropdown button */
+    .dropdown button {
+      padding: 10px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Style the dropdown content (hidden by default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    /* Style the checkbox labels */
+    .dropdown-content label {
+      display: block;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    /* Style the checkbox input */
+    .dropdown-content input {
+      margin-right: 8px;
+    }
 
 
 .toggleContainer {
@@ -86,18 +121,161 @@
    color: white;
    transition: color 0.3s;
  }
+ label {
+            display: block;
+            margin-bottom: 8px;
+        }
 </style>
 
 <script src="https://d3js.org/d3.v4.js"></script>
 <script type = "module" src = "scripts/script.js"></script>
 <script type = "module" src="scripts/chord_dia.js" defer></script>
 
-
+<script type="module">
+    import { toggleDropdown, updateSelectedCountries } from "./scripts/checkbox.js";
+  
+    // Use the imported functions in the global scope
+    window.toggleDropdown = toggleDropdown;
+    window.updateSelectedCountries = updateSelectedCountries;
+  </script>
+  
 
 </head>
 <!-- WorldMap view module: -->
 <body>
     <h1>Energy something</h1>
+
+    <div class="dropdown">
+        <button onclick="toggleDropdown()">Select countries</button>
+        <div class="dropdown-content" id="myDropdown">
+            <label>
+                <input type="checkbox" name="country" value="AL" onclick="updateSelectedCountries(this)"> Albania
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="AT" onclick="updateSelectedCountries(this)"> Austria
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="BA" onclick="updateSelectedCountries(this)"> Bosnia and Herzegovina
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="BE" onclick="updateSelectedCountries(this)"> Belgium
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="BG" onclick="updateSelectedCountries(this)"> Bulgaria
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="CY" onclick="updateSelectedCountries(this)"> Cyprus
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="CZ" onclick="updateSelectedCountries(this)"> Czechia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="DE" onclick="updateSelectedCountries(this)"> Germany
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="DK" onclick="updateSelectedCountries(this)"> Denmark
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="EE" onclick="updateSelectedCountries(this)"> Estonia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="EL" onclick="updateSelectedCountries(this)"> Greece
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="ES" onclick="updateSelectedCountries(this)"> Spain
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="FI" onclick="updateSelectedCountries(this)"> Finland
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="FR" onclick="updateSelectedCountries(this)"> France
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="GE" onclick="updateSelectedCountries(this)"> Georgia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="HR" onclick="updateSelectedCountries(this)"> Croatia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="HU" onclick="updateSelectedCountries(this)"> Hungary
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="IE" onclick="updateSelectedCountries(this)"> Ireland
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="IS" onclick="updateSelectedCountries(this)"> Iceland
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="IT" onclick="updateSelectedCountries(this)"> Italy
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="LI" onclick="updateSelectedCountries(this)"> Liechtenstein
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="LT" onclick="updateSelectedCountries(this)"> Lithuania
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="LU" onclick="updateSelectedCountries(this)"> Luxembourg
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="LV" onclick="updateSelectedCountries(this)"> Latvia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="MD" onclick="updateSelectedCountries(this)"> Moldova
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="ME" onclick="updateSelectedCountries(this)"> Montenegro
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="MK" onclick="updateSelectedCountries(this)"> North Macedonia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="MT" onclick="updateSelectedCountries(this)"> Malta
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="NL" onclick="updateSelectedCountries(this)"> Netherlands
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="NO" onclick="updateSelectedCountries(this)"> Norway
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="PL" onclick="updateSelectedCountries(this)"> Poland
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="PT" onclick="updateSelectedCountries(this)"> Portugal
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="RO" onclick="updateSelectedCountries(this)"> Romania
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="RS" onclick="updateSelectedCountries(this)"> Serbia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="SE" onclick="updateSelectedCountries(this)"> Sweden
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="SI" onclick="updateSelectedCountries(this)"> Slovenia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="SK" onclick="updateSelectedCountries(this)"> Slovakia
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="TR" onclick="updateSelectedCountries(this)"> Türkiye
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="UA" onclick="updateSelectedCountries(this)"> Ukraine
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="UK" onclick="updateSelectedCountries(this)"> United Kingdom
+            </label>
+            <label>
+                <input type="checkbox" name="country" value="XK" onclick="updateSelectedCountries(this)"> Kosovo
+            </label>
+          <!-- Add more checkboxes as needed -->
+        </div>
+      </div>
+
+
     <div id="content"></div>
     <div id="mapLegend"></div>
 

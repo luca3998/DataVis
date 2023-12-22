@@ -2,7 +2,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import *  as overTime from "./overtime.js";
 import worldMap from "../europe.json" assert { type: 'json' };
 import {colors, dataset, selectedCountries,countryArray, slider, total_import, country_data, total_export,getImportValue, getSliderValue} from "./global.js";
-
+import { checkAllCountries } from "./checkbox.js";
 
 // This part renders the map on screen
 const projection = d3.geoEquirectangular()
@@ -218,6 +218,8 @@ function handleCountryClick(event, d) {
                 countryArray.splice(index, 1);
                 updateCountry(countryName, false);
             }
+            console.log(countryArray)
+            checkAllCountries();
     });
 }
 
