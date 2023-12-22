@@ -1,4 +1,5 @@
 import { countryArray } from "./global.js";
+import { updateCountry } from "./script.js";
 
 // Toggle the dropdown visibility
 export function toggleDropdown() {
@@ -13,16 +14,23 @@ export function toggleDropdown() {
             if (checkbox.checked) {
                 // If checked, add the value to the array
                 countryArray.push(checkbox.value);
+                var countryLabel = checkbox.parentNode.textContent.trim();
+            console.log(countryLabel);
+                updateCountry(countryLabel, 1)
             } else {
                 // If unchecked, remove the value from the array
                 var index = countryArray.indexOf(checkbox.value);
                 if (index !== -1) {
+                    var countryLabel = checkbox.parentNode.textContent.trim();
+                    console.log(countryLabel);
                     countryArray.splice(index, 1);
+                    updateCountry(countryLabel, 0)
                 }
             }
 
             // Display selected countries (you can modify this part according to your needs)
             console.log('Selected countries: ' + countryArray.join(', '));
+            
         }
 
         export function checkAllCountries() {

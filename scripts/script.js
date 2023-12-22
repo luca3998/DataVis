@@ -2,6 +2,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import *  as overTime from "./overtime.js";
 import worldMap from "../europe.json" assert { type: 'json' };
 import {colors, dataset, selectedCountries,countryArray, slider, total_import, country_data, total_export,getImportValue, getSliderValue} from "./global.js";
+import * as sankey from "./sankeyView.js";
 import { checkAllCountries } from "./checkbox.js";
 
 // This part renders the map on screen
@@ -108,7 +109,7 @@ function loadMap(){
             .range(['white', 'blue']);
 
             loadLegend(colorScale, maxVal);
-            
+
             const filteredData = data_one.filter(d => d.TIME_PERIOD === slider.value);
             svg.selectAll("path")
             .data(data.features)
@@ -135,8 +136,8 @@ function loadMap(){
                         .attr('width', 8)
                         .attr('height', 8)
                         .attr('fill', 'light gray'); // Stripe color
-                        
-                    return 'url(#stripes)' ; 
+
+                    return 'url(#stripes)' ;
                 }
             })
             .on("click", handleCountryClick)
@@ -148,6 +149,7 @@ function loadMap(){
 
 loadMap();
 overTime.overTImeView();
+sankey.sankeyView();
 
 
 function getCountryCode(targetCountryName, callback) {
@@ -182,15 +184,15 @@ function getCountryCode(targetCountryName, callback) {
     }).catch(function(error) {
       console.error("Error loading data:", error);
     });
-  } 
+  }
 
-// this function updates the overTime view so that it changes from import to export values 
-// and vice versa when the buttons are pressed. 
-function updateOverview(){ 
+// this function updates the overTime view so that it changes from import to export values
+// and vice versa when the buttons are pressed.
+function updateOverview(){
     const svg = d3.select("#overTimeGraph").select("svg").remove();
-    // opnieuw drawen 
+    // opnieuw drawen
     overTime.overTImeView();
-    // opnieuw vullen 
+    // opnieuw vullen
     selectedCountries.forEach(country => {
         updateCountry(country,0);
         updateCountry(country,1);
@@ -219,7 +221,7 @@ function handleCountryClick(event, d) {
     const countryName = d.properties.name;
     const index = selectedCountries.indexOf(countryName);
     var currentFillColor = d3.select(this).attr("fill");
-    
+
     if(currentFillColor === "url(#stripes)"){
         alert("No data available for " + countryName + " for this year, select a different country or year.");
         return;
@@ -268,12 +270,12 @@ document.addEventListener('DOMContentLoaded', function() {
     handleSliderChange();
 });
 
-function updateCountry(country, add) {
+export function updateCountry(country, add) {
     d3.csv(dataset_total).then(function (allData) {
         // Reset legend
         d3.select("#legend").select("svg").remove();
         const legend = d3.select("#legend").append("svg");
-
+        
         // Update graphs
         getCountryCode(country, function(countryCode) {
             const data = allData.filter(function(row) {
@@ -281,7 +283,7 @@ function updateCountry(country, add) {
               });
             overTime.updateOverTime(country, countryCode, add, data);
         // });
-        
+
         // Update lines for potential new Y-axis domain
         selectedCountries.forEach((selCountry, i) => {
             getCountryColor(selCountry, function(currentCountryColor) {
