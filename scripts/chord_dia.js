@@ -10,8 +10,6 @@ var countries_chord = []
 // Function to handle the slider value change
 function handleSliderChange() {
     sliderValue = getSliderValue();
-    console.log('Current slider value:', sliderValue);
-
     reloadFigure()
 }
 
@@ -54,8 +52,6 @@ function loadCSV_chord() {
     else if (is_import_local === 0) {
         filepath_chord = `datasets/elec_export/elec_export_${sliderValue}.csv`;
     }
-    console.log(filepath_chord)
-
     drawChordDiagram();
 }
 
