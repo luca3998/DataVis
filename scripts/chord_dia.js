@@ -2,7 +2,7 @@
 import { getSliderValue, getCountries, getImportValue, country_data } from './global.js';
 
 
-var filepath_chord = "datasets/elec_export/elec_export_2000.csv"
+var filepath_chord = "datasets/elec_export/elec_export_2020.csv"
 var sliderValue = 2020
 var is_import_local = 1
 var countries_chord = []

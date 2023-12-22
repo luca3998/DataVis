@@ -2,11 +2,7 @@
 
 export const selectedCountries = [];
 export const countryArray = [];
-export const colors = {
-    "Russia": "red",
-    "France": "blue",
-    "Germany": "green"
-};
+
 export const transitionTime = 1000;
 export const dataset = "fakedata.csv";
 export const total_import = "datasets/totals/import.csv";

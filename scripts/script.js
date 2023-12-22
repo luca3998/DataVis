@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import *  as overTime from "./overtime.js";
 import worldMap from "../europe.json" assert { type: 'json' };
-import {colors, dataset, selectedCountries,countryArray, slider, total_import, country_data, total_export,getImportValue, getSliderValue} from "./global.js";
+import {selectedCountries,countryArray, slider, total_import, country_data, total_export,getImportValue, getSliderValue} from "./global.js";
 import * as sankey from "./sankeyView.js";
 import { checkAllCountries } from "./checkbox.js";
 
